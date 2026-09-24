@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: student-performance-app
+
+spec:
+
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: student-performance
+
+  template:
+
+    metadata:
+      labels:
+        app: student-performance
+
+    spec:
+
+      containers:
+
+        - name: student-performance
+
+          image: sandesh6/student-performance-predictor:latest
+
+          imagePullPolicy: Always
+
+          ports:
+
+            - containerPort: 5000
+
+          readinessProbe:
+
+            httpGet:
+              path: /health
+              port: 5000
+
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+
+            httpGet:
+              path: /health
+              port: 5000
+
+            initialDelaySeconds: 15
+            periodSeconds: 20
